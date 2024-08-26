@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
   name: silly-template
-  namespace: argo-workflows
+  namespace: workflows
 spec:
   entrypoint: silly
   serviceAccountName: sa-workflow
