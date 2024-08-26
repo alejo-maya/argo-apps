@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: silly-template
+  namespace: argo-workflows
+spec:
+  entrypoint: silly
+  serviceAccountName: sa-workflow
+  templates:
+    - name: silly
+      dag:
+        tasks:
+        - name: test-01
+          template: echo
+          arguments:
+            parameters:
+            - name: message
+              value: test-01
+        - name: test-02
+          template: echo
+          arguments:
+            parameters:
+            - name: message
+              value: test-02
+          dependencies: 
+          - test-01
+        - name: test-02-2
+          template: echo
+          arguments:
+            parameters:
+            - name: message
+              value: test-02-2
+          dependencies: 
+          - test-01
+        - name: test-03
+          template: echo
+          arguments:
+            parameters:
+            - name: message
+              value: test-03
+          dependencies: 
+          - test-02
+          - test-02-2
+    
+    - name: echo
+      inputs:
+        parameters:
+        - name: message
+      container:
+        image: alpine
+        command: [echo]
+        args:
+        - "{{inputs.parameters.message}}"
