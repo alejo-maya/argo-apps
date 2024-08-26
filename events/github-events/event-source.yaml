@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: github-event-source
+  namespace: argo-events
+spec:
+  service:
+    ports:
+      - name: github-es-svc
+        port: 12000
+        targetPort: 12000
+  github:
+    github-es-svc:
+      repositories:
+        - owner: alejo-maya
+          names:
+            - hello-world-node
+      webhook:
+        endpoint: /push
+        port: "12000"
+        method: POST
+        url: http://135.237.10.13.nip.io
+      events:
+        - "push"
+      apiToken:
+        name: github-access
+        key: token
+      insecure: false
+      active: true
+      contentType: json
